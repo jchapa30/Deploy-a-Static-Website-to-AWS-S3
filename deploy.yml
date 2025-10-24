@@ -1,0 +1,16 @@
+---
+- name: Deploy static website to S3
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    bucket_name: 2025-static-website-v1
+    website_path: /home/jchapa30/Devops/AWS_S3_Static_website/my-website/my-website
+
+  tasks:
+    - name: Sync website files to S3
+      ansible.builtin.shell: |
+        aws s3 sync ./ s3://{{ bucket_name }} --delete --exclude ".git/*" --exclude "deploy.yml"
+      args:
+        chdir: "{{ website_path }}"
